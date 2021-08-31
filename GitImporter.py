@@ -33,7 +33,7 @@ class GitRepository(object):
 
 
 if __name__ == '__main__':
-	repo_url = sys.argv[1]
+	repo_url = 'https://github.com/microservices-patterns/ftgo-application'
 	repo = GitRepository(repo_url)
 	local_path = r'root/repos'
 	#repo.RemoveDir()
