@@ -18,7 +18,7 @@ app.use(express.static(__dirname));
 //rooter post
 app.post('/post',(req,res)=>{
     //res.header('Access-Control-Allow-Origin','*')
-    res.writeHead(200,{'Content-Type': "text/plain", 'Access-Control-Allow-Origin': '*'});
+    //res.writeHead(200,{'Content-Type': "text/plain", 'Access-Control-Allow-Origin': '*'});
     //get url and use MARS to analyse
     console.log(req.body)
     for (let val in req.body){
