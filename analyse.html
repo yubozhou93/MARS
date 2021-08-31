@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Mars_anti-patrons</title>
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Font Awesome icons (free version)-->
+        <script src="https://use.fontawesome.com/releases/v5.15.3/js/all.js" crossorigin="anonymous"></script>
+        <!-- Google fonts-->
+        <link href="https://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800" rel="stylesheet" type="text/css" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">  
+	    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+	    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+        
+        <script>
+            //const ws =new WebSocket('ws://localhost:8080')
+            // ws.onopen=function (res){
+            //     console.log("connected");
+            //     console.log(res);
+            // }
+            // ws.onmessage=(msg)=>{
+            //     console.log('information from server'+msg.data)
+            // }
+            // ws.onclose=()=>{
+            //     console.log('disconnected')
+            // }
+            var i = 1;
+            
+            function getUrl(){
+                var url=document.getElementById("text1");
+                var info=document.getElementById("info");
+                info.innerHTML=""
+                var str=(url.value).replace(/(^\s*)|(\s*$)/g, '');
+                var Expression=/http(s)?:\/\/([\w-]+\.)+[\w-]+(\/[\w- .\/?%&=]*)?/;
+                var objExp=new RegExp(Expression);
+                if (str == '' || str == undefined || str == null ) {
+                    info.innerHTML='please entre a url';
+                    info.className='bg-danger';
+                } else  if(objExp.test(url.value)!=true){
+                    url.value="";
+                    info.innerHTML='Please enter the correct url';
+                    info.className='bg-danger';
+                }else{
+                var tr=document.createElement("tr");
+                table.appendChild(tr);
+                var newUrl=document.createElement("td");
+                newUrl.setAttribute('name','url'+i)
+                newUrl.innerText=url.value;
+                tr.appendChild(newUrl);
+                newUrl.style="display: inline-block;width: 100%;overflow: hidden;white-space: nowrap;text-overflow:ellipsis;"
+                url.value="";
+                i++;
+                }
+            }
+            function getValue(){
+            //  //websocket
+            //window.location.href="result.html"
+            //var str = document.getElementById('table').outerHTML;
+            //document.all.submitvalue.value=str;
+            //form1.submit();
+            //ws.send(str)
+            // var tab =document.getElementById('table');
+            // var rows = tab.rows;
+            // for (var i=0;i<rows.length;i++){
+            //     for(var j=0;j<rows[i].cells.length;j++){ 
+            //         //get a row data form 'table'
+            //         console.log("row"+(i+1)+"，Column"+(j+1)+":"+rows[i].cells[j].innerHTML);
+            //         //ws.send(rows[i].cells[j].innerHTML);   send to server one by one
+            //     }    
+            // }
+            //data from server, this is test data             
+            //ws.onmessage=(msg)=>{
+              //  console.log('information from server'+msg.data)
+            //}
+            // var obj = {
+            // "name": "ftgo-application_testName",
+            // "WC": ["testData1","testData2"],
+            // "CD": ["testData1","testData2","testData3"]
+            // };
+            // //affiche dans la page
+            // sessionStorage.setItem('jsonParams',JSON.stringify(obj));
+            // document.getElementById("Result").innerHTML += '<iframe  marginwidth=0 marginheight=0 width="100%" height="1200" src="jieguo.html" frameborder="no" scrolling="no"></iframe>';
+            var tabLen = document.getElementById("table");
+            
+            var jsonT= '{';
+            for (var i = 0; i < tabLen.rows.length; i++) {
+                    jsonT += '"url'+i+'":"' + tabLen.rows[i].cells[0].innerHTML +'",'
+            }
+            jsonT= jsonT.substr(0, jsonT.length - 1);
+            jsonT +='}';
+            // for (var i = 0; i < tabLen.rows.length; i++) {
+            //      jsonT.push(tabLen.rows[i].cells[0].innerHTML)
+            // }
+            //ajax
+            $.ajax({
+                    type: "post",
+                    url: "http://localhost:3000/post",
+                    contentType: "application/json; charset=utf-8",
+                    data: jsonT,
+                    timeout:100000,
+                    processData: false, 
+                    dataType: "json",
+                    success: function (data) {
+                        console.log("sucess");
+                        //console.log(data)
+                        //console.log(typeof(data))
+                        setHtml(data);
+                    },
+                    error: function (XMLHttpResponse, textStatus, errorThrown) {
+                        console.log("1 异步调用返回失败,XMLHttpResponse.readyState:"+XMLHttpResponse.readyState);
+                        console.log("2 异步调用返回失败,XMLHttpResponse.status:"+XMLHttpResponse.status);
+                        console.log("3 异步调用返回失败,textStatus:"+textStatus);
+                        console.log("4 异步调用返回失败,errorThrown:"+errorThrown);
+                        console.log("failed");
+                    }
+                });
+            // var form =document.getElementById('form');
+            // var formData = new FormData(form);
+            //  var xhr = new XMLHttpRequest();
+            //  xhr.open('post','http://localhost:3000/post');
+            //  xhr.setRequestHeader('Content-type','application/json')
+            //  xhr.send(jsonT);
+            //  xhr.onload=function(){
+            //      console.log(xhr.responseText)
+            //  }
+            // xhr.onload = function(){
+            //     if (xhr.status==200){
+            //         console.log(xhr.responseText);
+            //     }
+            // }
+        }
+
+        </script>
+    </head>
+    <body>
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">Mars_anti-patrons</a>
+                <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    Menu
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                    <ul class="navbar-nav ml-auto">
+                        <li class="nav-item"><a class="nav-link" href="index.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="about.html">About</a></li>
+                        <li class="nav-item"><a class="nav-link" href="analyse.html">Analyse</a></li>
+                        <li class="nav-item"><a class="nav-link" href="contact.html">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- Page Header-->
+        <header class="masthead" style="background-image: url('assets/img/post-bg.jpg')">
+            <div class="overlay"></div>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-md-10 mx-auto">
+                        <div class="post-heading">
+                            <h1 align='center'>Mars</h1>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!-- Post Content-->
+        <article>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-md-10 mx-auto">
+                        <p>please enter a url</p >
+                        <div class="input-group">
+                            <input type="text" value="" class ="form-control" id="text1"><br/>
+                            <span class="input-group-btn">
+                                <input type="button" value="confirm" class="btn btn-primary" id="confirm" onclick="getUrl()"/>
+                            </span>
+                        </div>
+                        <div class="col-lg-4">
+                            <p id="info"></p>
+                        </div>    
+                       
+                    </div>
+                    <div class="col-lg-8 col-md-10 mx-auto">
+                        <p>list of repositories to analyse</p >
+                        
+                            <table id ="table" name="table" class="table table-condensed table-bordered text-nowrap" style="table-layout:fixed;">
+                            </table>
+                        
+                            <div class="form-group mr-5">
+                                <button type="button" class="btn btn-primary" onclick='getValue()'>Analyse</button>
+                            </div>
+                    </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-8 col-md-10 mx-auto">
+                    <div class="accordion accordion-flush" id="accordionFlushExample">
+                        <!-- <div class="accordion-item">
+                            <h2 class="accordion-header" id="flush-headingZero"></h2>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </article>
+
+        <hr />
+        <!-- Footer-->
+        <footer>
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-8 col-md-10 mx-auto">
+                        <ul class="list-inline text-center">
+                            <li class="list-inline-item">
+                                <a href="#!">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-twitter fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#!">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-facebook-f fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="list-inline-item">
+                                <a href="#!">
+                                    <span class="fa-stack fa-lg">
+                                        <i class="fas fa-circle fa-stack-2x"></i>
+                                        <i class="fab fa-github fa-stack-1x fa-inverse"></i>
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                        <p class="copyright text-muted">Copyright &copy; MARS 2021</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+        <!-- Bootstrap core JS-->
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+        <script>
+            //var result = document.getElementById('flush-headingZero');
+            var result = document.getElementById('accordionFlushExample');
+            var indexI=1;
+            //var indexJ=1;
+            function setHtml(data){
+                //$("#flush-headingZero").empty();
+                $("#accordionFlushExample").empty();
+                        console.log(data)
+                        for (var val in data) {
+                            console.log (val+ " " + data[val]);
+                            result.innerHTML+='<div class="accordion-item">'
+                                +'<h2 class="accordion-header" id="flush-heading'+'A'+indexI+'">'
+                                +'<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse'+'A'+indexI+'" aria-expanded="false" aria-controls="flush-collapse'+'A'+indexI+'">'+val+'</button>'
+                                +'<div id="flush-collapse'+'A'+indexI+'" class="accordion-collapse collapse" aria-labelledby="flush-heading'+'A'+indexI+'" data-bs-parent="#accordionFlushExample">'
+                                +'<div class="accordion-body">'
+                                +'<div class="accordion accordion-flush" id="accordionFlushExample'+'A'+indexI+'">'+'</div>'+'</div>';
+                                +'</div>'
+                                +'</h2>'
+                                +'</div>';
+                            setSouTitle(val,indexI,data)
+                            indexI++;
+                            //creat accordion
+                            // var title = '<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseZero" aria-expanded="false" aria-controls="flush-collapseZero"id="name-label'+indexI+'">'
+                            //     +val+'</button>' 
+                            // var souTitle = '<div id="flush-collapseZero" class="accordion-collapse collapse" aria-labelledby="flush-headingZero" data-bs-parent="#accordionFlushExample">'
+                            // result.innerHTML+=title;
+                            // result.innerHTML+=souTitle+'<div class="accordion-body">'+'<div class="accordion accordion-flush" id="accordionFlushExample1">'+'</div>'+'</div>';
+                            // indexI++;
+                        //     var detail = document.getElementById("accordionFlushExample"+indexI+"");
+                        //     for (Key in data[val]){
+                        //         //console.log (Key+ " " + data[val][Key]);
+                        //         //creat sous accordion
+                        //         detail.innerHTML+='<div class="accordion-item">'
+                        //             +'<h2 class="accordion-header" id="flush-heading'+indexJ+'">'
+                        //             +'<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse'+indexJ+'" aria-expanded="false" aria-controls="flush-collapse'+indexJ+'">'+Key+'</button>'
+                        //             +'</h2>'
+                        //             +'<div id="flush-collapse'+indexJ+'" class="accordion-collapse collapse" aria-labelledby="flush-heading'+indexJ+'" data-bs-parent="#accordionFlushExample1">'
+                        //             +'<div class="accordion-body">'+ data[val][Key]+'</div>'
+                        //             +'</div>'
+                        //             +'</div>';
+                        //         indexJ++;
+                        //     }
+                         }
+            }
+            function setSouTitle(val,indexI,data){
+                var indexJ=1;
+                var detail = document.getElementById("accordionFlushExample"+"A"+indexI+"");
+                for (Key in data[val]){
+                                //creat sous accordion
+                                detail.innerHTML+='<div class="accordion-item">'
+                                    +'<h2 class="accordion-header" id="flush-heading'+indexI+indexJ+'">'
+                                    +'<button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse'+indexI+indexJ+'" aria-expanded="false" aria-controls="flush-collapse'+indexI+indexJ+'">'+Key+'</button>'
+                                    +'</h2>'
+                                    +'<div id="flush-collapse'+indexI+indexJ+'" class="accordion-collapse collapse" aria-labelledby="flush-heading'+indexI+indexJ+'" data-bs-parent="#accordionFlushExample1">'
+                                    +'<div class="accordion-body">'+ data[val][Key]+'</div>'
+                                    +'</div>'
+                                    +'</div>';
+                                indexJ++;
+                            }
+            }
+        </script>
+    </body>
+</html>
