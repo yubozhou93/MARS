@@ -25,7 +25,8 @@ app.post('/post',(req,res)=>{
         const process = spawn('python',['./GitImporter.py',req.body[val]])
         process.stdout.on('data',data=>{
         console.log(JSON.parse(data))
-        var projet = '{"repos":'+data+'}'
+        var projet = '{"repos":'+data+'}';
+        res.writeHead(200,{'Content-Type': "text/plain", 'Access-Control-Allow-Origin': '*'});
         res.send(JSON.parse(projet));
         });
     }
