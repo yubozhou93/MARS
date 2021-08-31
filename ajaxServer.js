@@ -22,7 +22,7 @@ app.post('/post',(req,res)=>{
     console.log(req.body)
     for (let val in req.body){
         //console.log(req.body[val])
-        const process = spawn('python',['./GitImporter.py',req.body[val]])
+        const process = spawn('python3',['./GitImporter.py',req.body[val]])
         process.stdout.on('data',data=>{
         console.log(JSON.parse(data))
         var projet = '{"repos":'+data+'}'

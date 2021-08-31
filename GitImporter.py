@@ -10,7 +10,7 @@ import json
 
 class GitRepository(object):
 	def __init__(self,repo_url,branch = 'master'):
-		self.local_path = r'D:\repos'
+		self.local_path = r'/root/repos'
 		self.repo_url = repo_url
 		self.repo = None
 		self.initial(repo_url,branch)
@@ -35,7 +35,7 @@ class GitRepository(object):
 if __name__ == '__main__':
 	repo_url = sys.argv[1]
 	repo = GitRepository(repo_url)
-	local_path = r'D:\repos'
+	local_path = r'/root/repos'
 	#repo.RemoveDir()
 	result = {}
 	repoName = repo_url.split('/')[-1]
